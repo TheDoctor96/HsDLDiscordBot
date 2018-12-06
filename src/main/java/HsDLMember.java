@@ -11,8 +11,9 @@ public class HsDLMember {
 
 
     //elenco costruttori
-    public HsDLMember(String nickname){
+    public HsDLMember(String nickname, String userID){
         this.nickname=nickname;
+        this.userID = userID;
 
     }
 

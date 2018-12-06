@@ -1,8 +1,11 @@
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.managers.GuildController;
+import net.dv8tion.jda.core.requests.restaction.MemberAction;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,8 +20,8 @@ public class UserManager extends ListenerAdapter {
 
     private GuildController guildController=null;
 
-    public UserManager() {
-        sqlManager = new SQLManager();
+    public UserManager(SQLManager sqlManager) {
+        this.sqlManager = sqlManager;
     }
 
     private void kick(TextChannel channel) {
@@ -68,6 +71,8 @@ public class UserManager extends ListenerAdapter {
             if(guildController==null)
                 guildController = new GuildController(event.getGuild());
             kick(event.getTextChannel());
+            int n = sqlManager.updateMembers(fetchMembers());
+            System.out.println("Sono stati aggiunti " + n + " membri.");
         }
 
     }
@@ -128,6 +133,28 @@ public class UserManager extends ListenerAdapter {
         }
 
         stopKick();
+    }
+
+    private List<HsDLMember> fetchMembers(){
+        if(guildController==null)
+            return null;
+
+        Guild guild = guildController.getGuild();
+
+        List<Member> members = guild.getMembers();
+        LinkedList<HsDLMember> hsDLMembers = new LinkedList<>();
+
+        for(Member m : members){
+            if(!m.getUser().isBot()) {
+                String userID = m.getUser().getId();
+                String nickname = m.getEffectiveName();
+
+                //TODO sistema il fetch, deve comprendere tutte le info
+                hsDLMembers.add(new HsDLMember(nickname, userID));
+            }
+        }
+
+        return hsDLMembers;
     }
 }
 

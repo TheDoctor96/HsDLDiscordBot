@@ -8,12 +8,15 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-    private static String TOKEN = "MzE5MTg4NDYwMDM4NjUxOTE1.DuOCKQ.FcYheYBskVJgVUuQgpuiTEy0t90";
+    private static final String TOKEN = "NDkxNzQ0NTUwNTE2NDI0NzMw.DuoFyQ.MA6jzAQA18XVzn9PeAdNmClH3Gc";
+    public static final String  TOKEN2 = "MzE5MTg4NDYwMDM4NjUxOTE1.DuoMtg.9kJSZK4A-KaMVXV8sgpvtxLWgZ8";
 
 
     public static void main(String[] args) throws Exception {
-        JDA api = new JDABuilder(TOKEN).build();
-        api.addEventListener(new UserManager());
+        JDA api = new JDABuilder(TOKEN2).build();
+        SQLManager sqlManager = new SQLManager();
+        api.addEventListener(new UserManager(sqlManager));
+
     }
 
 }
